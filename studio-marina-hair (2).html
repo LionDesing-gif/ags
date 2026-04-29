@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio Marina Hair</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c5a059;
+      --gold-hover: #a68445;
+      --gold-light: rgba(197,160,89,0.13);
+      --base-bg: #fdfcfb;
+      --surface: #faf8f5;
+      --base-text: #1a1a1a;
+      --muted: #8c857d;
+      --border: #e5e1da;
+      --rose-red: #e11d48;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--base-bg); color: var(--base-text); min-height: 100vh; }
+    .font-serif { font-family: 'Playfair Display', serif; }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ===== CLIENT HOME ===== */
+    #view-client { min-height: 100vh; padding-bottom: 5rem; background: #faf9f7; }
+    .hero { position: relative; height: 280px; overflow: hidden; }
+    @media (min-width: 768px) { .hero { height: 340px; } }
+    .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.42); }
+    .hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1rem; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3.2rem); font-style: italic; color: #fff; letter-spacing: 0.02em; margin-bottom: 0.5rem; text-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    .hero-subtitle { color: rgba(255,255,255,0.85); font-size: 0.65rem; letter-spacing: 0.28em; font-weight: 700; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 500px; }
+    .btn-hero { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: background 0.2s; border: none; text-decoration: none; color: #fff; background: rgba(255,255,255,0.2); }
+    .btn-hero:hover { background: rgba(255,255,255,0.3); }
+    .btn-hero.primary { background: rgba(197,160,89,0.75); font-weight: 700; }
+    .btn-hero.primary:hover { background: rgba(197,160,89,0.9); }
+    .main-container { max-width: 56rem; margin: -2.5rem auto 0; padding: 0 1rem; position: relative; z-index: 10; }
+    .card { background: #fff; border: 1px solid var(--border); box-shadow: 0 4px 24px rgba(197,160,89,0.08); padding: 1.5rem; margin-bottom: 2rem; }
+    @media (min-width: 768px) { .card { padding: 2rem; } }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--base-text); text-align: center; margin-bottom: 1.5rem; }
+    .services-grid { display: grid; gap: 1rem; }
+    @media (min-width: 480px) { .services-grid { grid-template-columns: 1fr 1fr; } }
+    .service-card { border: 1px solid var(--border); cursor: pointer; display: flex; flex-direction: row; min-height: 7rem; transition: border-color 0.2s, box-shadow 0.2s; background: #fff; overflow: hidden; }
+    .service-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(197,160,89,0.12); }
+    .service-img { width: 6rem; flex-shrink: 0; overflow: hidden; }
+    .service-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .service-card:hover .service-img img { transform: scale(1.06); }
+    .service-body { padding: 0.75rem 1rem; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
+    .service-name { font-weight: 500; margin-bottom: 0.25rem; }
+    .service-footer { display: flex; align-items: flex-end; justify-content: space-between; margin-top: auto; padding-top: 0.5rem; }
+    .service-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); }
+    .service-price .starts-at { display: block; font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 0.1rem; }
+    .service-duration { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+
+    /* ===== BOOKING ===== */
+    .booking-back { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); cursor: pointer; border: none; background: none; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.3rem; transition: color 0.2s; }
+    .booking-back:hover { color: var(--gold-hover); }
+    .booking-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .booking-meta { color: var(--muted); font-size: 0.85rem; padding-bottom: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--gold-light); }
+    .booking-grid { display: grid; gap: 2rem; }
+    @media (min-width: 768px) { .booking-grid { grid-template-columns: 1fr 1fr; } }
+    .step-label { font-weight: 500; color: var(--base-text); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .step-num { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--gold-light); color: var(--gold-hover); font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    /* Calendar */
+    .cal-wrap { border: 1px solid var(--gold-light); overflow: hidden; background: #fff; }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: var(--surface); border-bottom: 1px solid var(--gold-light); }
+    .cal-header h3 { font-size: 0.9rem; font-weight: 500; color: var(--base-text); text-transform: capitalize; }
+    .cal-nav { border: none; background: none; cursor: pointer; color: var(--gold-hover); padding: 0.25rem; border-radius: 50%; transition: background 0.15s; }
+    .cal-nav:hover { background: var(--gold-light); }
+    .cal-body { padding: 0.75rem; }
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.15rem; margin-bottom: 0.25rem; }
+    .cal-weekday { text-align: center; font-size: 0.65rem; font-weight: 600; color: var(--gold); padding: 0.25rem 0; }
+    .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.15rem; }
+    .cal-day { border: 1px solid transparent; background: none; cursor: pointer; font-family: 'Playfair Display', serif; font-size: 0.85rem; min-height: 2.4rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; color: var(--base-text); }
+    .cal-day:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-light); }
+    .cal-day:disabled { color: #ccc; cursor: not-allowed; }
+    .cal-day.today { border-color: var(--gold); color: var(--gold-hover); background: var(--gold-light); }
+    .cal-day.selected { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+    /* Slots */
+    .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    @media (min-width: 400px) { .slots-grid { grid-template-columns: repeat(4, 1fr); } }
+    .slot-btn { border: 1px solid var(--border); background: #fff; cursor: pointer; padding: 0.5rem; font-size: 0.8rem; text-align: center; color: var(--muted); transition: all 0.15s; }
+    .slot-btn:hover { border-color: var(--gold); color: var(--gold-hover); }
+    .slot-btn.selected { border-color: var(--gold); background: var(--gold-light); color: var(--gold-hover); font-weight: 700; }
+    .slots-empty { font-size: 0.85rem; color: var(--muted); background: var(--surface); padding: 1.5rem; text-align: center; border: 1px solid var(--border); }
+
+    /* Client form */
+    .client-form { border-top: 1px solid var(--gold-light); padding-top: 2rem; margin-top: 1.5rem; }
+    .form-grid { display: grid; gap: 1rem; }
+    @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    input[type=text], input[type=tel], input[type=url], input[type=number], input[type=email], input[type=password], select {
+      border: 1px solid var(--border); padding: 0.65rem 1rem; font-size: 0.9rem; font-family: 'Inter', sans-serif; color: var(--base-text); background: #fff; outline: none; transition: border-color 0.15s; width: 100%;
+    }
+    input:focus, select:focus { border-color: var(--gold); }
+    input[type=color] { padding: 0.2rem; cursor: pointer; height: 2.5rem; width: 3rem; border: 1px solid var(--border); }
+    input[type=checkbox] { width: 1.5rem; height: 1.5rem; accent-color: var(--gold); }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.7rem 1.5rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; cursor: pointer; border: none; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .btn-primary { background: var(--gold); color: #fff; }
+    .btn-primary:hover { background: var(--gold-hover); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary.full { width: 100%; }
+    .btn-dark { background: var(--base-text); color: #fff; }
+    .btn-dark:hover { background: #333; }
+    .btn-ghost { background: none; color: var(--muted); }
+    .btn-ghost:hover { color: var(--base-text); }
+    .btn-danger { background: #fef2f2; color: #dc2626; }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-success { background: #16a34a; color: #fff; }
+    .btn-success:hover { background: #15803d; }
+    .btn-green-light { background: #f0fdf4; color: #15803d; }
+    .btn-green-light:hover { background: #dcfce7; }
+    .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.65rem; }
+    .btn-icon { padding: 0.4rem; border-radius: 4px; }
+    .btn-full { width: 100%; }
+    .mt-6 { margin-top: 1.5rem; }
+
+    /* Footer */
+    .client-footer { text-align: center; padding: 2rem 1rem; color: var(--muted); font-size: 0.8rem; }
+    .client-footer .footer-details { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; margin-bottom: 1rem; }
+    .client-footer .footer-detail { display: flex; align-items: center; gap: 0.4rem; }
+    .admin-link { color: var(--gold); text-decoration: underline; cursor: pointer; background: none; border: none; font-family: 'Inter', sans-serif; font-size: 0.8rem; }
+
+    /* Modals */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+    .modal { background: #fff; width: 100%; max-width: 26rem; padding: 2rem; position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.2); animation: zoomIn 0.2s ease; }
+    @keyframes zoomIn { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; border: none; background: none; cursor: pointer; color: var(--muted); transition: color 0.15s; }
+    .modal-close:hover { color: var(--base-text); }
+    .modal-icon { width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+    .loyalty-modal-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; text-align: center; margin-bottom: 0.3rem; }
+    .loyalty-modal-sub { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+    .pts-display { background: var(--gold-light); border: 1px solid rgba(197,160,89,0.2); padding: 1.5rem; text-align: center; margin-bottom: 1rem; }
+    .pts-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold-hover); margin-bottom: 0.3rem; }
+    .pts-value { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--gold-hover); }
+    .pts-hint { font-size: 0.7rem; color: var(--gold); margin-top: 0.3rem; }
+    .referral-box { background: var(--surface); border: 1px solid var(--border); padding: 1rem; margin-top: 1rem; }
+    .referral-box-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
+    .referral-icon { background: rgba(251,191,36,0.2); color: #d97706; border-radius: 4px; width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; }
+    .referral-title { font-size: 0.8rem; font-weight: 700; }
+    .referral-sub { font-size: 0.7rem; color: var(--muted); }
+    .referral-row { display: flex; gap: 0.4rem; }
+    .referral-phone { flex: 1; background: #fff; border: 1px solid var(--border); padding: 0.5rem 0.75rem; font-size: 0.8rem; font-family: monospace; color: var(--muted); }
+    .success-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .success-modal { background: #fff; text-align: center; padding: 2.5rem; width: 100%; max-width: 22rem; animation: zoomIn 0.3s ease; }
+    .success-icon { width: 5rem; height: 5rem; border-radius: 50%; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+    .success-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .bouncing-dots { display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 1.5rem; }
+    .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--gold); animation: bounce 0.8s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.16s; }
+    .dot:nth-child(3) { animation-delay: 0.32s; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+    /* ===== ADMIN ===== */
+    #view-admin { display: none; min-height: 100vh; background: var(--base-bg); }
+    #view-admin.active { display: flex; flex-direction: column; }
+    @media (min-width: 768px) { #view-admin.active { flex-direction: row; } }
+    .sidebar { background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 20; }
+    @media (min-width: 768px) { .sidebar { width: 18rem; border-bottom: none; border-right: 1px solid var(--border); height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column; } }
+    .sidebar-brand { padding: 1.5rem 2rem; }
+    .sidebar-brand h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-style: italic; color: var(--base-text); }
+    .sidebar-brand h1 span { color: var(--gold); font-style: normal; }
+    .sidebar-brand p { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.18em; font-weight: 700; color: var(--muted); margin-top: 0.3rem; }
+    .sidebar-nav { display: flex; flex-direction: row; overflow-x: auto; padding: 0.5rem; gap: 0.25rem; scrollbar-width: none; }
+    .sidebar-nav::-webkit-scrollbar { display: none; }
+    @media (min-width: 768px) { .sidebar-nav { flex-direction: column; padding: 0; overflow-x: visible; } }
+    .nav-btn { display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1.25rem; font-size: 0.8rem; font-weight: 500; white-space: nowrap; cursor: pointer; border: none; background: none; color: var(--muted); transition: all 0.15s; font-family: 'Inter', sans-serif; border-radius: 4px; }
+    .nav-btn:hover { background: var(--gold-light); color: var(--base-text); }
+    .nav-btn.active { background: rgba(197,160,89,0.12); color: var(--gold-hover); font-weight: 600; }
+    @media (min-width: 768px) { .nav-btn { border-radius: 0; border-right: 3px solid transparent; padding: 1rem 1.5rem; } .nav-btn.active { border-right-color: var(--gold); background: rgba(197,160,89,0.08); } }
+    .sidebar-footer { padding: 1.5rem; margin-top: auto; display: none; }
+    @media (min-width: 768px) { .sidebar-footer { display: block; } }
+    .view-site-btn { display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-size: 0.75rem; color: var(--muted); cursor: pointer; border: none; background: none; transition: color 0.15s; font-family: 'Inter', sans-serif; width: 100%; }
+    .view-site-btn:hover { color: var(--base-text); }
+    .admin-main { flex: 1; padding: 1.5rem 1rem; overflow-x: hidden; }
+    @media (min-width: 768px) { .admin-main { padding: 2.5rem; height: 100vh; overflow-y: auto; } }
+    .admin-section { display: none; max-width: 64rem; }
+    .admin-section.active { display: block; }
+    .admin-section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 2rem; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    .appt-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .appt-card { background: #fff; border: 1px solid var(--border); padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+    .appt-card.today { border-color: var(--gold); }
+    @media (min-width: 640px) { .appt-card { flex-direction: row; align-items: center; justify-content: space-between; } }
+    .appt-left { display: flex; align-items: center; gap: 1rem; }
+    .appt-date { padding: 0.75rem 1rem; border-right: 1px solid var(--border); text-align: center; min-width: 4.5rem; flex-shrink: 0; }
+    .appt-date-month { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .appt-date-day { font-family: 'Playfair Display', serif; font-size: 2rem; line-height: 1; color: var(--base-text); }
+    .appt-card.today .appt-date-day { color: var(--gold-hover); }
+    .appt-service { color: var(--gold-hover); font-weight: 500; margin-bottom: 0.2rem; }
+    .appt-client { font-size: 0.85rem; color: var(--muted); }
+    .appt-phone { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+    .appt-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .services-admin-grid { display: grid; gap: 1rem; }
+    @media (min-width: 640px) { .services-admin-grid { grid-template-columns: 1fr 1fr; } }
+    .service-admin-card { background: #fff; border: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; }
+    .service-admin-img { width: 100%; height: 8rem; object-fit: cover; margin-bottom: 1rem; border: 1px solid var(--border); }
+    .service-admin-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); }
+    .service-admin-actions { display: flex; gap: 0.25rem; }
+    .form-panel { background: #fff; border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 2rem; }
+    .form-panel-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--gold-light); display: inline-block; }
+    .form-panel-grid { display: grid; gap: 1rem; margin-bottom: 1rem; }
+    @media (min-width: 640px) { .form-panel-grid { grid-template-columns: 1fr 1fr; } }
+    .form-panel-actions { display: flex; justify-content: flex-end; gap: 0.75rem; align-items: center; padding-top: 1rem; }
+    .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .checkbox-row label { font-size: 0.85rem; font-weight: 500; color: var(--base-text); text-transform: none; letter-spacing: normal; }
+    .checkbox-row input[type=checkbox] { width: 1rem; height: 1rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+    .settings-form { background: #fff; border: 1px solid var(--border); padding: 2rem; max-width: 36rem; }
+    .settings-field { margin-bottom: 1.25rem; }
+    .settings-img-preview { margin-top: 0.75rem; border: 1px solid var(--border); overflow: hidden; aspect-ratio: 16/9; }
+    .settings-img-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .settings-footer { padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+    .loyalty-form { background: #fff; border: 1px solid var(--border); padding: 2rem; max-width: 36rem; }
+    .loyalty-toggle { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--gold-light); border: 1px solid rgba(197,160,89,0.2); margin-bottom: 1.5rem; }
+    .loyalty-toggle-info h3 { font-weight: 600; color: var(--gold-hover); }
+    .loyalty-toggle-info p { font-size: 0.8rem; color: var(--gold); }
+    .loyalty-grid { display: grid; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (min-width: 640px) { .loyalty-grid { grid-template-columns: 1fr 1fr; } }
+    .loyalty-footer { display: flex; justify-content: flex-end; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+    .clients-table-wrap { background: #fff; border: 1px solid var(--border); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 38rem; }
+    thead tr { background: var(--surface); border-bottom: 1px solid var(--border); }
+    th { padding: 0.85rem 1.25rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); text-align: left; }
+    td { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface); }
+    .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.75rem; font-size: 0.75rem; font-weight: 700; border-radius: 999px; }
+    .badge-gold { background: var(--gold-light); color: var(--gold-hover); border: 1px solid rgba(197,160,89,0.2); }
+    .empty-state { background: #fff; border: 1px solid var(--border); padding: 3rem; text-align: center; color: var(--muted); font-size: 0.9rem; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--base-text); color: #fff; padding: 0.75rem 1.25rem; font-size: 0.85rem; z-index: 999; animation: slideUp 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); max-width: 18rem; }
+    @keyframes slideUp { from { transform: translateY(1rem); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* Admin login */
+    .login-overlay { position: fixed; inset: 0; background: var(--base-bg); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .login-card { background: #fff; border: 1px solid var(--border); padding: 2.5rem; width: 100%; max-width: 22rem; text-align: center; }
+    .login-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-style: italic; margin-bottom: 0.3rem; }
+    .login-sub { font-size: 0.75rem; color: var(--muted); margin-bottom: 2rem; }
+    .login-field { text-align: left; margin-bottom: 1rem; }
+    .login-error { font-size: 0.78rem; color: #dc2626; margin-top: 0.5rem; }
+
+    /* Updates & Download */
+    #view-updates { min-height: 100vh; background: #f3f4f6; padding: 2.5rem 1rem; }
+    .updates-title { font-family: 'Playfair Display', serif; color: var(--rose-red); font-size: 2rem; border-bottom: 2px solid #fecdd3; padding-bottom: 0.75rem; margin-bottom: 2rem; text-align: center; }
+    .update-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; max-width: 50rem; margin-left: auto; margin-right: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .update-card h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .update-date { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 1.25rem; }
+    .update-list { list-style: disc; padding-left: 1.5rem; }
+    .update-list li { margin-bottom: 0.75rem; color: #374151; font-size: 0.9rem; }
+    .update-list li strong { color: #111827; }
+    #view-download { min-height: 100vh; background: #f9fafb; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .download-card { background: #fff; width: 100%; max-width: 36rem; border-radius: 1rem; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 4px 24px rgba(0,0,0,0.08); text-align: center; }
+    .download-header { background: var(--gold); height: 8rem; display: flex; align-items: center; justify-content: center; }
+    .download-header h1 { font-family: 'Playfair Display', serif; font-style: italic; color: #fff; font-size: 1.8rem; }
+    .download-body { padding: 2rem; }
+    .download-icon-wrap { width: 5rem; height: 5rem; background: #fff; border-radius: 50%; margin: -3.5rem auto 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(0,0,0,0.1); border: 1px solid var(--gold-light); }
+    .download-body h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .download-body p { color: #6b7280; margin-bottom: 2rem; font-size: 0.9rem; max-width: 24rem; margin-left: auto; margin-right: auto; }
+    .download-actions { display: flex; flex-direction: column; gap: 0.75rem; max-width: 20rem; margin: 0 auto; }
+    .download-btn-primary { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; background: var(--gold); color: #fff; transition: all 0.2s; }
+    .download-btn-primary:hover { background: var(--gold-hover); }
+    .download-btn-row { display: flex; gap: 0.5rem; }
+    .download-btn-dark { flex: 1; background: #111827; color: #fff; border-radius: 0.75rem; font-size: 0.8rem; padding: 0.65rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; cursor: pointer; border: none; font-weight: 500; transition: background 0.2s; }
+    .download-btn-dark:hover { background: #000; }
+    .download-footer-strip { background: #fff7ed; color: var(--gold-hover); font-size: 0.85rem; font-weight: 500; padding: 1rem; border-top: 1px solid var(--gold-light); }
+  </style>
+</head>
+<body>
+
+<!-- CLIENT HOME -->
+<div id="view-client" class="view active">
+  <header class="hero">
+    <img id="hero-banner" src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Banner" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title" id="hero-salon-name">Studio Marina Hair</h1>
+      <p class="hero-subtitle">Realçando sua beleza</p>
+      <div class="hero-actions">
+        <a id="hero-google-link" href="#" target="_blank" class="btn-hero">⭐ Avaliar no Google</a>
+        <button class="btn-hero primary" onclick="openLoyaltyModal()">🏆 Meus Pontos</button>
+        <a id="hero-instagram-link" href="#" target="_blank" class="btn-hero">📸 <span id="hero-instagram-text">@instagram</span></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div id="services-section" class="card">
+      <h2 class="section-title">Nossos Serviços</h2>
+      <div class="services-grid" id="services-grid"></div>
+    </div>
+
+    <div id="booking-section" class="card" style="display:none">
+      <button class="booking-back" onclick="backToServices()">← Voltar</button>
+      <h2 class="booking-title" id="booking-service-name"></h2>
+      <p class="booking-meta" id="booking-service-meta"></p>
+
+      <div id="booking-success-msg" style="display:none;text-align:center;padding:2rem 0">
+        <div style="width:4rem;height:4rem;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem">✓</div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:0.5rem">Agendamento Solicitado!</h3>
+        <p style="color:var(--muted);font-size:0.85rem">Redirecionando para WhatsApp...</p>
+      </div>
+
+      <div id="booking-form-wrap">
+        <div class="booking-grid">
+          <div>
+            <div class="step-label"><span class="step-num">1</span> Escolha a Data</div>
+            <div class="cal-wrap" id="calendar-root"></div>
+          </div>
+          <div>
+            <div class="step-label"><span class="step-num">2</span> Escolha o Horário</div>
+            <div id="slots-wrap"><div class="slots-empty">Selecione uma data para ver os horários</div></div>
+          </div>
+        </div>
+        <div class="client-form" id="client-form-wrap" style="display:none">
+          <div class="step-label"><span class="step-num">3</span> Seus Dados</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Nome Completo</label><input type="text" id="inp-client-name" placeholder="Ex: Maria Carolina" /></div>
+            <div class="form-group"><label>Telefone (WhatsApp)</label><input type="tel" id="inp-client-phone" placeholder="11 99999-9999" /></div>
+            <div class="form-group full"><label>Alguém te indicou? (Telefone do amigo — Opcional)</label><input type="tel" id="inp-referral-phone" placeholder="Ex: 11999999999" /></div>
+          </div>
+          <button class="btn btn-primary btn-full mt-6" onclick="submitBooking()">Confirmar Agendamento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="client-footer">
+    <div class="footer-details">
+      <div class="footer-detail">📞 <span id="footer-phone"></span></div>
+      <div class="footer-detail">📸 <span id="footer-instagram"></span></div>
+    </div>
+    <p id="footer-copyright"></p>
+    <p style="margin-top:0.3rem;font-size:0.7rem">
+      Acesso <button class="admin-link" onclick="goToAdmin()">Área da Marina</button>
+      &nbsp;·&nbsp; <button class="admin-link" onclick="showView('view-updates')">Atualizações</button>
+      &nbsp;·&nbsp; <button class="admin-link" onclick="showView('view-download')">Baixar App</button>
+    </p>
+  </footer>
+</div>
+
+<!-- LOYALTY MODAL -->
+<div id="loyalty-modal" class="modal-overlay" style="display:none" onclick="closeLoyaltyIfOutside(event)">
+  <div class="modal" id="loyalty-modal-inner">
+    <button class="modal-close" onclick="closeLoyaltyModal()">✕</button>
+    <div class="modal-icon" style="background:var(--gold-light);font-size:1.8rem">🏆</div>
+    <h3 class="loyalty-modal-title">Seus Pontos</h3>
+    <p class="loyalty-modal-sub">Consulte seus benefícios e indique amigas</p>
+    <div id="loyalty-lookup-form">
+      <div class="form-group" style="margin-bottom:1rem"><label>Informe seu WhatsApp</label><input type="tel" id="inp-loyalty-phone" placeholder="Ex: 11999999999" /></div>
+      <button class="btn btn-primary btn-full" onclick="checkLoyalty()">Ver meus pontos</button>
+    </div>
+    <div id="loyalty-result" style="display:none">
+      <div class="pts-display">
+        <div class="pts-label">Saldo Atual</div>
+        <div class="pts-value"><span id="pts-count">0</span> <span style="font-size:1rem">pts</span></div>
+        <div class="pts-hint" id="pts-hint"></div>
+      </div>
+      <div class="referral-box">
+        <div class="referral-box-header">
+          <div class="referral-icon">🔗</div>
+          <div><div class="referral-title">Indique e Ganhe</div><div class="referral-sub" id="referral-bonus-text">Ganhe pontos por amiga</div></div>
+        </div>
+        <div class="referral-row">
+          <div class="referral-phone" id="referral-phone-display">Seu número: ---</div>
+          <button class="btn btn-success btn-sm" onclick="shareReferral()">Indicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div id="success-modal" class="success-modal-overlay" style="display:none">
+  <div class="success-modal">
+    <div class="success-icon" style="font-size:2rem">✓</div>
+    <h3 class="success-title">Agendamento Enviado!</h3>
+    <p style="color:var(--muted);font-size:0.85rem">Estamos redirecionando você para o WhatsApp para confirmar os detalhes finais.</p>
+    <div class="bouncing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div id="admin-login" class="login-overlay" style="display:none">
+  <div class="login-card">
+    <h2 class="login-title">Área da Marina</h2>
+    <p class="login-sub">Painel de Gestão · Studio Marina Hair</p>
+    <div class="login-field"><label>Senha</label><input type="password" id="inp-admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="login-error" id="login-error" style="display:none">Senha incorreta.</div>
+    <button class="btn btn-primary btn-full" style="margin-top:1rem" onclick="doLogin()">Entrar</button>
+    <button class="btn btn-ghost" style="margin-top:0.75rem;width:100%;font-size:0.75rem" onclick="cancelLogin()">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="view-admin" class="view">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><h1>Studio Marina <span>Hair</span></h1><p>Painel de Gestão</p></div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" onclick="setAdminTab('agenda',this)">📅 Agenda</button>
+      <button class="nav-btn" onclick="setAdminTab('services',this)">✂️ Serviços</button>
+      <button class="nav-btn" onclick="setAdminTab('settings',this)">⚙️ Dados do Salão</button>
+      <button class="nav-btn" onclick="setAdminTab('loyalty',this)">🏆 Fidelidade</button>
+      <button class="nav-btn" onclick="setAdminTab('clients',this)">👥 Clientes</button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="view-site-btn" onclick="showView('view-client')">↗ Ver site do cliente</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div id="tab-agenda" class="admin-section active">
+      <h2 class="admin-section-title">Próximos Agendamentos</h2>
+      <div id="appt-list-wrap"></div>
+    </div>
+
+    <div id="tab-services" class="admin-section">
+      <div class="section-header">
+        <h2 class="admin-section-title" style="margin:0">Serviços Oferecidos</h2>
+        <button class="btn btn-primary" onclick="toggleServiceForm()">+ Novo Serviço</button>
+      </div>
+      <div id="service-form-panel" class="form-panel" style="display:none">
+        <span class="form-panel-title" id="service-form-title">Cadastrar Novo Serviço</span>
+        <div class="form-panel-grid">
+          <div class="form-group"><label>Nome do Serviço</label><input type="text" id="svc-name" /></div>
+          <div class="form-group"><label>Duração (minutos)</label><input type="number" id="svc-duration" value="60" /></div>
+          <div class="form-group"><label>Valor (R$)</label><input type="number" id="svc-price" value="0" step="0.01" /></div>
+          <div class="form-group"><label>URL da Imagem (Opcional)</label><input type="url" id="svc-image" placeholder="https://..." /></div>
+        </div>
+        <div class="checkbox-row"><input type="checkbox" id="svc-starts-at" /><label for="svc-starts-at">Valor "a partir de"</label></div>
+        <hr class="divider" />
+        <div class="form-panel-grid">
+          <div class="form-group"><label>Fonte do Nome</label><select id="svc-name-font"><option value="sans">Sans-Serif (Moderno)</option><option value="serif">Serif (Clássico)</option><option value="mono">Monospace</option></select></div>
+          <div class="form-group"><label>Cor do Nome</label><div style="display:flex;gap:.5rem"><input type="color" id="svc-name-color" value="#1a1a1a" oninput="document.getElementById('svc-name-color-txt').value=this.value" /><input type="text" id="svc-name-color-txt" value="#1a1a1a" style="flex:1;font-family:monospace;font-size:.8rem;text-transform:uppercase" oninput="document.getElementById('svc-name-color').value=this.value" /></div></div>
+          <div class="form-group"><label>Fonte do Valor</label><select id="svc-price-font"><option value="serif">Serif (Clássico)</option><option value="sans">Sans-Serif (Moderno)</option><option value="mono">Monospace</option></select></div>
+          <div class="form-group"><label>Cor do Valor</label><div style="display:flex;gap:.5rem"><input type="color" id="svc-price-color" value="#c5a059" oninput="document.getElementById('svc-price-color-txt').value=this.value" /><input type="text" id="svc-price-color-txt" value="#c5a059" style="flex:1;font-family:monospace;font-size:.8rem;text-transform:uppercase" oninput="document.getElementById('svc-price-color').value=this.value" /></div></div>
+        </div>
+        <div class="form-panel-actions">
+          <button class="btn btn-ghost" onclick="cancelServiceForm()">Cancelar</button>
+          <button class="btn btn-dark" onclick="saveService()">Salvar</button>
+        </div>
+      </div>
+      <div class="services-admin-grid" id="services-admin-grid"></div>
+    </div>
+
+    <div id="tab-settings" class="admin-section">
+      <h2 class="admin-section-title">Informações do Salão</h2>
+      <div class="settings-form">
+        <div class="settings-field"><label>Nome do Salão</label><input type="text" id="set-salon-name" /></div>
+        <div class="settings-field"><label>WhatsApp para agendamentos</label><input type="text" id="set-phone" /></div>
+        <div class="settings-field"><label>Usuário do Instagram</label><input type="text" id="set-instagram" placeholder="@hair.studio.marina" /></div>
+        <div class="settings-field"><label>Link Avaliação Google</label><input type="text" id="set-google-review" /></div>
+        <div class="settings-field">
+          <label>Imagem de Capa (URL)</label>
+          <input type="url" id="set-banner-url" oninput="previewBanner()" />
+          <div class="settings-img-preview" id="banner-preview" style="display:none"><img id="banner-preview-img" src="" alt="Preview" /></div>
+        </div>
+        <div class="settings-footer"><button class="btn btn-primary" onclick="saveSettings()">Salvar Alterações</button></div>
+      </div>
+    </div>
+
+    <div id="tab-loyalty" class="admin-section">
+      <h2 class="admin-section-title">Programa de Fidelidade</h2>
+      <div class="loyalty-form">
+        <div class="loyalty-toggle">
+          <div class="loyalty-toggle-info"><h3>Ativar Programa</h3><p>Habilite o acúmulo de pontos e recompensas</p></div>
+          <input type="checkbox" id="loyalty-enabled" />
+        </div>
+        <div class="loyalty-grid">
+          <div class="form-group"><label>Pontos por Agendamento</label><input type="number" id="loyalty-pts-per-service" value="10" /></div>
+          <div class="form-group"><label>Bônus de Indicação</label><input type="number" id="loyalty-referral-bonus" value="20" /></div>
+          <div class="form-group"><label>Pontos Mínimos para Resgate</label><input type="number" id="loyalty-min-pts" value="100" /></div>
+          <div class="form-group"><label>Desconto por Ponto (R$)</label><input type="number" id="loyalty-discount" step="0.01" value="0.1" /><p style="font-size:.65rem;color:var(--muted);margin-top:.3rem;font-style:italic">Ex: 0.1 = 10 pontos valem R$ 1,00</p></div>
+        </div>
+        <div class="loyalty-footer"><button class="btn btn-dark" onclick="saveLoyalty()">Atualizar Programa</button></div>
+      </div>
+    </div>
+
+    <div id="tab-clients" class="admin-section">
+      <div class="section-header">
+        <h2 class="admin-section-title" style="margin:0">Ranking de Clientes</h2>
+        <span id="clients-count" style="color:var(--muted);font-size:.85rem"></span>
+      </div>
+      <div class="clients-table-wrap">
+        <table><thead><tr><th>Nome</th><th>WhatsApp</th><th>Pontos</th><th style="text-align:center">Indicações</th><th style="text-align:center">Ações</th></tr></thead>
+        <tbody id="clients-tbody"></tbody></table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- UPDATES PAGE -->
+<div id="view-updates" class="view">
+  <div style="max-width:50rem;margin:0 auto;padding:2rem 1rem">
+    <div style="margin-bottom:1.5rem"><button class="btn btn-ghost" onclick="showView('view-client')" style="font-size:.8rem;padding:.5rem 1rem">← Voltar</button></div>
+    <h1 class="updates-title">📋 Histórico de Atualizações</h1>
+    <div class="update-card">
+      <h2>Programa de Fidelidade e Modais Interativos</h2>
+      <div class="update-date">Últimas Atualizações</div>
+      <ul class="update-list">
+        <li><strong>Programa de Fidelidade:</strong> Sistema automático onde os clientes acumulam pontos ao ter um atendimento concluído.</li>
+        <li><strong>Indique e Ganhe:</strong> Clientes podem gerar links para indicar amigos. O cliente que indicou recebe pontos bônus.</li>
+        <li><strong>Gestão de Fidelidade (Admin):</strong> Aba dedicada para ligar/desligar o programa, definir pontos e bônus.</li>
+        <li><strong>Ranking de Clientes (Admin):</strong> Listagem com pontos e indicações de cada cliente.</li>
+        <li><strong>Modal de Agendamento Concluído:</strong> Tela de sucesso com redirecionamento para WhatsApp.</li>
+        <li><strong>Modal de Consulta de Pontos (Cliente):</strong> Clientes consultam saldo pelo WhatsApp e compartilham indicação.</li>
+      </ul>
+    </div>
+    <div class="update-card">
+      <h2>Customização Dinâmica e Edição de Serviços</h2>
+      <div class="update-date">Atualizações Anteriores</div>
+      <ul class="update-list">
+        <li><strong>Edição Avançada:</strong> Editar serviços existentes sem precisar excluí-los.</li>
+        <li><strong>Opção "A partir de":</strong> Checkbox para prefixar valores não fixos.</li>
+        <li><strong>Customização Visual:</strong> Fonte e cor do nome e preço do serviço.</li>
+      </ul>
+    </div>
+    <div class="update-card">
+      <h2>Lançamento Inicial da Plataforma</h2>
+      <div class="update-date">Versão 1.0</div>
+      <ul class="update-list">
+        <li><strong>Interface do Cliente:</strong> Grade de serviços com imagens, duração e valores.</li>
+        <li><strong>Agendamento com Calendário:</strong> Escolha de dia e horário com confirmação via WhatsApp.</li>
+        <li><strong>Dashboard Administrativo:</strong> Gestão de agendamentos e configurações do salão.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- DOWNLOAD PAGE -->
+<div id="view-download" class="view">
+  <div class="download-card">
+    <div class="download-header"><h1>Studio Marina Hair</h1></div>
+    <div class="download-body">
+      <div class="download-icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <h2>Tenha o salão na palma da sua mão</h2>
+      <p>Agende seus horários com facilidade, acompanhe seus pontos e indique amigas para ganhar bônus exclusivos.</p>
+      <div class="download-actions">
+        <button class="download-btn-primary" onclick="showView('view-client')">Acessar Web App (Navegador)</button>
+        <div class="download-btn-row">
+          <button class="download-btn-dark" onclick="alert('Disponível em breve na Play Store!')">📱 App Android</button>
+          <button class="download-btn-dark" onclick="alert('Disponível em breve na App Store!')">🍎 App iOS</button>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;font-size:.75rem;color:#9ca3af"><button class="admin-link" onclick="showView('view-client')">← Voltar ao site</button></p>
+    </div>
+    <div class="download-footer-strip">Experimente nosso Programa de Fidelidade ✨</div>
+  </div>
+</div>
+
+<div id="toast" class="toast" style="display:none"></div>
+
+<script>
+// ===== DATA LAYER =====
+const DEFAULT_DATA = {
+  settings: {
+    salonName: "Studio Marina Hair",
+    phone: "11 96646-2521",
+    googleReviewUrl: "https://g.page/r/CSmwQUgRrY4-EBM/review",
+    instagram: "@hair.studio.marina",
+    bannerUrl: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+  },
+  loyaltySettings: { enabled: true, pointsPerService: 10, referralBonus: 20, minPointsToRedeem: 100, discountPerPoint: 0.1 },
+  services: [
+    { id: "1", name: "Corte Feminino", price: 80, duration: 60, image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=400&q=80", startsAt: false, nameFontFamily: "sans", nameColor: "#1a1a1a", priceFontFamily: "serif", priceColor: "#c5a059" },
+    { id: "2", name: "Escova Modeladora", price: 60, duration: 40, image: "https://images.unsplash.com/photo-1595476108010-b4d1f10d5e43?auto=format&fit=crop&w=400&q=80", startsAt: false, nameFontFamily: "sans", nameColor: "#1a1a1a", priceFontFamily: "serif", priceColor: "#c5a059" },
+    { id: "3", name: "Coloração Completa", price: 150, duration: 120, image: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=400&q=80", startsAt: true, nameFontFamily: "sans", nameColor: "#1a1a1a", priceFontFamily: "serif", priceColor: "#c5a059" }
+  ],
+  appointments: [],
+  clients: []
+};
+
+const ADMIN_PASSWORD = "marina2024";
+
+function loadData() {
+  try { const s = localStorage.getItem('marina_app_data'); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+  catch(e) { return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+}
+function saveData(d) { localStorage.setItem('marina_app_data', JSON.stringify(d)); }
+let APP = loadData();
+
+// ===== VIEWS =====
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'view-client') renderClient();
+  if (id === 'view-admin') renderAdmin();
+  window.scrollTo(0,0);
+}
+
+// ===== RENDER CLIENT =====
+function renderClient() {
+  const { settings, services } = APP;
+  document.getElementById('hero-banner').src = settings.bannerUrl || DEFAULT_DATA.settings.bannerUrl;
+  document.getElementById('hero-salon-name').textContent = settings.salonName;
+  document.getElementById('hero-google-link').href = settings.googleReviewUrl || '#';
+  document.getElementById('hero-instagram-link').href = settings.instagram ? `https://instagram.com/${settings.instagram.replace('@','')}` : '#';
+  document.getElementById('hero-instagram-text').textContent = settings.instagram || '';
+  document.getElementById('footer-phone').textContent = settings.phone;
+  document.getElementById('footer-instagram').textContent = settings.instagram;
+  document.getElementById('footer-copyright').textContent = `© ${new Date().getFullYear()} ${settings.salonName}. Todos os direitos reservados.`;
+
+  const fontMap = { sans: 'Inter,sans-serif', serif: "'Playfair Display',serif", mono: "'Courier New',monospace" };
+  const grid = document.getElementById('services-grid');
+  grid.innerHTML = services.map(s => `
+    <div class="service-card" onclick="startBooking('${s.id}')">
+      ${s.image ? `<div class="service-img"><img src="${s.image}" alt="${s.name}" /></div>` : ''}
+      <div class="service-body">
+        <div class="service-name" style="font-family:${fontMap[s.nameFontFamily||'sans']};color:${s.nameColor||'#1a1a1a'}">${s.name}</div>
+        <div class="service-footer">
+          <div class="service-price" style="font-family:${fontMap[s.priceFontFamily||'serif']};color:${s.priceColor||'#c5a059'}">
+            ${s.startsAt ? '<span class="starts-at">A partir de</span>' : ''}R$ ${s.price.toFixed(2)}
+          </div>
+          <div class="service-duration">${s.duration} min</div>
+        </div>
+      </div>
+    </div>`).join('') || '<p style="color:var(--muted);text-align:center;grid-column:1/-1">Nenhum serviço cadastrado ainda.</p>';
+}
+
+// ===== BOOKING =====
+let selectedService = null, selectedDate = null, selectedTime = null, calCurrentMonth = new Date();
+
+function startBooking(id) {
+  selectedService = APP.services.find(s => s.id === id);
+  selectedDate = null; selectedTime = null; calCurrentMonth = new Date();
+  document.getElementById('services-section').style.display = 'none';
+  document.getElementById('booking-section').style.display = 'block';
+  document.getElementById('booking-service-name').textContent = `Agendar ${selectedService.name}`;
+  document.getElementById('booking-service-meta').innerHTML = `Valor: <strong>R$ ${selectedService.price.toFixed(2)}</strong>${selectedService.startsAt?' (a partir de)':''} &nbsp;•&nbsp; Duração: <strong>${selectedService.duration} min</strong>`;
+  document.getElementById('booking-success-msg').style.display = 'none';
+  document.getElementById('booking-form-wrap').style.display = 'block';
+  document.getElementById('client-form-wrap').style.display = 'none';
+  renderCalendar(); window.scrollTo(0,0);
+}
+
+function backToServices() {
+  document.getElementById('services-section').style.display = '';
+  document.getElementById('booking-section').style.display = 'none';
+  selectedService = null; selectedDate = null; selectedTime = null;
+}
+
+function renderCalendar() {
+  const root = document.getElementById('calendar-root');
+  const year = calCurrentMonth.getFullYear(), month = calCurrentMonth.getMonth();
+  const first = new Date(year, month, 1), last = new Date(year, month+1, 0);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  let days = '';
+  for(let i=0;i<first.getDay();i++) days += '<div></div>';
+  for(let d=1;d<=last.getDate();d++) {
+    const dt = new Date(year,month,d), isPast = dt < today;
+    const isTod = dt.getTime()===today.getTime(), isSel = selectedDate && dt.getTime()===selectedDate.getTime();
+    days += `<button class="cal-day${isTod&&!isSel?' today':''}${isSel?' selected':''}" ${isPast?'disabled':`onclick="selectDate(${year},${month},${d})"`} type="button">${d}</button>`;
+  }
+  root.innerHTML = `
+    <div class="cal-header">
+      <button class="cal-nav" type="button" onclick="calPrev()">‹</button>
+      <h3>${monthNames[month]} ${year}</h3>
+      <button class="cal-nav" type="button" onclick="calNext()">›</button>
+    </div>
+    <div class="cal-body">
+      <div class="cal-weekdays">${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(d=>`<div class="cal-weekday">${d}</div>`).join('')}</div>
+      <div class="cal-days">${days}</div>
+    </div>`;
+}
+
+function calPrev() { calCurrentMonth = new Date(calCurrentMonth.getFullYear(), calCurrentMonth.getMonth()-1, 1); renderCalendar(); }
+function calNext() { calCurrentMonth = new Date(calCurrentMonth.getFullYear(), calCurrentMonth.getMonth()+1, 1); renderCalendar(); }
+
+function fmtDate(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+function selectDate(y,m,d) {
+  selectedDate = new Date(y,m,d); selectedTime = null;
+  renderCalendar(); renderSlots();
+  document.getElementById('client-form-wrap').style.display = 'none';
+}
+
+function renderSlots() {
+  const wrap = document.getElementById('slots-wrap');
+  if(!selectedDate){wrap.innerHTML='<div class="slots-empty">Selecione uma data para ver os horários</div>';return;}
+  const dateStr = fmtDate(selectedDate), booked = APP.appointments.filter(a=>a.date===dateStr).map(a=>a.time);
+  const slots = [];
+  for(let h=9;h<18;h++){const t=`${String(h).padStart(2,'0')}:00`;if(!booked.includes(t))slots.push(t);}
+  if(!slots.length){wrap.innerHTML='<div class="slots-empty">Sem horários disponíveis nessa data</div>';return;}
+  wrap.innerHTML=`<div class="slots-grid">${slots.map(t=>`<button type="button" class="slot-btn${selectedTime===t?' selected':''}" onclick="selectTime('${t}')">${t}</button>`).join('')}</div>`;
+}
+
+function selectTime(t) {
+  selectedTime = t; renderSlots();
+  document.getElementById('client-form-wrap').style.display = 'block';
+  document.getElementById('client-form-wrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function submitBooking() {
+  const name = document.getElementById('inp-client-name').value.trim();
+  const phone = document.getElementById('inp-client-phone').value.trim();
+  const refPhone = document.getElementById('inp-referral-phone').value.trim();
+  if(!selectedService||!selectedDate||!selectedTime||!name||!phone){alert('Preencha todos os campos obrigatórios.');return;}
+  const appt = {id:Date.now().toString(),serviceId:selectedService.id,date:fmtDate(selectedDate),time:selectedTime,clientName:name,clientPhone:phone,createdAt:new Date().toISOString()};
+  APP.appointments.push(appt);
+  if(refPhone){const ref=APP.clients.find(c=>c.phone===refPhone);if(ref){ref.referrals=(ref.referrals||0)+1;ref.points=(ref.points||0)+(APP.loyaltySettings?.referralBonus||0);}}
+  if(!APP.clients.find(c=>c.phone===phone)) APP.clients.push({id:Date.now()+'c',name,phone,points:0,referrals:0});
+  saveData(APP);
+  document.getElementById('success-modal').style.display='flex';
+  setTimeout(()=>{
+    const msg=`Olá, gostaria de confirmar meu agendamento no Studio Marina Hair para o dia ${fmtDate(selectedDate)} às ${selectedTime}.`;
+    window.open(`https://wa.me/55${APP.settings.phone?.replace(/\D/g,'')||''}?text=${encodeURIComponent(msg)}`,'_blank');
+    document.getElementById('success-modal').style.display='none';
+    backToServices();
+    document.getElementById('inp-client-name').value='';
+    document.getElementById('inp-client-phone').value='';
+    document.getElementById('inp-referral-phone').value='';
+  },3000);
+}
+
+// ===== LOYALTY MODAL =====
+let loyaltyClient=null;
+function openLoyaltyModal(){document.getElementById('loyalty-modal').style.display='flex';document.getElementById('loyalty-lookup-form').style.display='block';document.getElementById('loyalty-result').style.display='none';document.getElementById('inp-loyalty-phone').value='';loyaltyClient=null;}
+function closeLoyaltyModal(){document.getElementById('loyalty-modal').style.display='none';}
+function closeLoyaltyIfOutside(e){if(e.target.id==='loyalty-modal')closeLoyaltyModal();}
+function checkLoyalty(){
+  const phone=document.getElementById('inp-loyalty-phone').value.trim();if(!phone)return;
+  const client=APP.clients.find(c=>c.phone===phone);
+  if(!client){alert('Cliente não encontrado ou ainda não possui pontos.');return;}
+  loyaltyClient=client;
+  document.getElementById('loyalty-lookup-form').style.display='none';
+  document.getElementById('loyalty-result').style.display='block';
+  document.getElementById('pts-count').textContent=client.points||0;
+  const minPts=APP.loyaltySettings?.minPointsToRedeem||100;
+  document.getElementById('pts-hint').textContent=(client.points||0)>=minPts?'Você já pode resgatar um desconto!':  `Faltam ${minPts-(client.points||0)} pts para o próximo resgate`;
+  document.getElementById('referral-bonus-text').textContent=`Ganhe ${APP.loyaltySettings?.referralBonus||0} pts por amiga`;
+  document.getElementById('referral-phone-display').textContent=`Seu número: ${client.phone}`;
+}
+function shareReferral(){if(!loyaltyClient)return;const text=`Oi! Estou amando os serviços do Studio Marina Hair. Agende seu horário e informe meu número (${loyaltyClient.phone}) para ganharmos bônus! ${window.location.href}`;window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');}
+
+// ===== ADMIN =====
+function goToAdmin(){document.getElementById('admin-login').style.display='flex';document.getElementById('inp-admin-password').value='';document.getElementById('login-error').style.display='none';setTimeout(()=>document.getElementById('inp-admin-password').focus(),100);}
+function doLogin(){if(document.getElementById('inp-admin-password').value===ADMIN_PASSWORD){document.getElementById('admin-login').style.display='none';showView('view-admin');}else document.getElementById('login-error').style.display='block';}
+function cancelLogin(){document.getElementById('admin-login').style.display='none';}
+
+function setAdminTab(tab,btn){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');
+  renderAdminSection(tab);
+}
+function renderAdmin(){renderAdminSection('agenda');loadSettingsForm();loadLoyaltyForm();}
+function renderAdminSection(tab){if(tab==='agenda')renderAgenda();if(tab==='services')renderServicesAdmin();if(tab==='clients')renderClients();}
+
+// Agenda
+function renderAgenda(){
+  const wrap=document.getElementById('appt-list-wrap');
+  const now=new Date(),cutoff=new Date(now.getTime()-2*60*60*1000);
+  const upcoming=[...APP.appointments].filter(a=>new Date(`${a.date}T${a.time}`)>cutoff).sort((a,b)=>new Date(`${a.date}T${a.time}`)-new Date(`${b.date}T${b.time}`));
+  if(!upcoming.length){wrap.innerHTML='<div class="empty-state">Nenhum agendamento futuro encontrado.</div>';return;}
+  const mon=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],todayStr=fmtDate(now);
+  wrap.innerHTML=`<div class="appt-list">${upcoming.map(a=>{
+    const dt=new Date(`${a.date}T${a.time}`),svc=APP.services.find(s=>s.id===a.serviceId)?.name||'Serviço',isTod=a.date===todayStr;
+    return `<div class="appt-card ${isTod?'today':''}">
+      <div class="appt-left">
+        <div class="appt-date"><div class="appt-date-month">${mon[dt.getMonth()]}</div><div class="appt-date-day">${String(dt.getDate()).padStart(2,'0')}</div></div>
+        <div>
+          <div style="font-size:1.1rem;font-weight:700">${a.time} <span style="color:var(--gold-hover);font-weight:500;font-size:.9rem">· ${svc}</span></div>
+          <div class="appt-client">Cliente: <strong>${a.clientName}</strong></div>
+          <div class="appt-phone">📱 ${a.clientPhone}</div>
+        </div>
+      </div>
+      <div class="appt-actions">
+        <button class="btn btn-success btn-sm" onclick="completeAppt('${a.id}')">✓ Concluir</button>
+        <a href="https://wa.me/55${(a.clientPhone||'').replace(/\D/g,'')}" target="_blank" class="btn btn-green-light btn-sm">WhatsApp</a>
+        <button class="btn btn-danger btn-sm" onclick="cancelAppt('${a.id}')">Cancelar</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function completeAppt(id){
+  const appt=APP.appointments.find(a=>a.id===id);if(!appt)return;
+  if(!confirm('Concluir atendimento e creditar pontos?'))return;
+  if(APP.loyaltySettings?.enabled){let c=APP.clients.find(c=>c.phone===appt.clientPhone);if(!c){c={id:Date.now()+'c',name:appt.clientName,phone:appt.clientPhone,points:0,referrals:0};APP.clients.push(c);}c.points=(c.points||0)+(APP.loyaltySettings?.pointsPerService||0);}
+  APP.appointments=APP.appointments.filter(a=>a.id!==id);saveData(APP);renderAgenda();showToast('Atendimento concluído e pontos creditados!');
+}
+function cancelAppt(id){if(!confirm('Cancelar este agendamento?'))return;APP.appointments=APP.appointments.filter(a=>a.id!==id);saveData(APP);renderAgenda();showToast('Agendamento cancelado.');}
+
+// Services Admin
+let editingServiceId=null;
+function renderServicesAdmin(){
+  const fontMap={sans:'Inter,sans-serif',serif:"'Playfair Display',serif",mono:"'Courier New',monospace"};
+  document.getElementById('services-admin-grid').innerHTML=APP.services.map(s=>`
+    <div class="service-admin-card">
+      ${s.image?`<img class="service-admin-img" src="${s.image}" alt="${s.name}" />`:''}
+      <div style="font-family:${fontMap[s.nameFontFamily||'sans']};color:${s.nameColor||'#1a1a1a'};font-weight:500;margin-bottom:.25rem">${s.name}</div>
+      <div class="service-admin-footer">
+        <div>
+          <div style="font-family:${fontMap[s.priceFontFamily||'serif']};color:${s.priceColor||'#c5a059'};font-size:1.1rem">
+            ${s.startsAt?`<span style="display:block;font-family:Inter,sans-serif;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">A partir de</span>`:''}R$ ${s.price.toFixed(2)}</div>
+          <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">${s.duration} min</div>
+        </div>
+        <div class="service-admin-actions">
+          <button class="btn btn-ghost btn-icon" onclick="editService('${s.id}')" title="Editar">✎</button>
+          <button class="btn btn-danger btn-icon" onclick="deleteService('${s.id}')" title="Excluir">🗑</button>
+        </div>
+      </div>
+    </div>`).join('')||'<div class="empty-state" style="grid-column:1/-1">Nenhum serviço cadastrado.</div>';
+}
+function toggleServiceForm(){
+  editingServiceId=null;document.getElementById('service-form-title').textContent='Cadastrar Novo Serviço';
+  ['svc-name','svc-image'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('svc-duration').value=60;document.getElementById('svc-price').value=0;document.getElementById('svc-starts-at').checked=false;
+  document.getElementById('svc-name-font').value='sans';document.getElementById('svc-name-color').value='#1a1a1a';document.getElementById('svc-name-color-txt').value='#1a1a1a';
+  document.getElementById('svc-price-font').value='serif';document.getElementById('svc-price-color').value='#c5a059';document.getElementById('svc-price-color-txt').value='#c5a059';
+  const p=document.getElementById('service-form-panel');p.style.display=p.style.display==='none'?'block':'none';
+}
+function editService(id){
+  const s=APP.services.find(s=>s.id===id);if(!s)return;editingServiceId=id;
+  document.getElementById('service-form-title').textContent='Editar Serviço';
+  document.getElementById('svc-name').value=s.name;document.getElementById('svc-duration').value=s.duration;document.getElementById('svc-price').value=s.price;
+  document.getElementById('svc-image').value=s.image||'';document.getElementById('svc-starts-at').checked=!!s.startsAt;
+  document.getElementById('svc-name-font').value=s.nameFontFamily||'sans';document.getElementById('svc-name-color').value=s.nameColor||'#1a1a1a';document.getElementById('svc-name-color-txt').value=s.nameColor||'#1a1a1a';
+  document.getElementById('svc-price-font').value=s.priceFontFamily||'serif';document.getElementById('svc-price-color').value=s.priceColor||'#c5a059';document.getElementById('svc-price-color-txt').value=s.priceColor||'#c5a059';
+  document.getElementById('service-form-panel').style.display='block';document.getElementById('service-form-panel').scrollIntoView({behavior:'smooth'});
+}
+function saveService(){
+  const name=document.getElementById('svc-name').value.trim();if(!name){alert('Nome é obrigatório.');return;}
+  const d={name,duration:parseInt(document.getElementById('svc-duration').value)||60,price:parseFloat(document.getElementById('svc-price').value)||0,image:document.getElementById('svc-image').value.trim(),startsAt:document.getElementById('svc-starts-at').checked,nameFontFamily:document.getElementById('svc-name-font').value,nameColor:document.getElementById('svc-name-color').value,priceFontFamily:document.getElementById('svc-price-font').value,priceColor:document.getElementById('svc-price-color').value};
+  if(editingServiceId){const i=APP.services.findIndex(s=>s.id===editingServiceId);if(i!==-1)APP.services[i]={...APP.services[i],...d};}
+  else APP.services.push({id:Date.now().toString(),...d});
+  saveData(APP);document.getElementById('service-form-panel').style.display='none';editingServiceId=null;renderServicesAdmin();showToast('Serviço salvo!');
+}
+function cancelServiceForm(){document.getElementById('service-form-panel').style.display='none';editingServiceId=null;}
+function deleteService(id){if(!confirm('Remover este serviço?'))return;APP.services=APP.services.filter(s=>s.id!==id);saveData(APP);renderServicesAdmin();showToast('Serviço removido.');}
+
+// Settings
+function loadSettingsForm(){const s=APP.settings;document.getElementById('set-salon-name').value=s.salonName||'';document.getElementById('set-phone').value=s.phone||'';document.getElementById('set-instagram').value=s.instagram||'';document.getElementById('set-google-review').value=s.googleReviewUrl||'';document.getElementById('set-banner-url').value=s.bannerUrl||'';previewBanner();}
+function previewBanner(){const url=document.getElementById('set-banner-url').value.trim();const p=document.getElementById('banner-preview');if(url){p.style.display='block';document.getElementById('banner-preview-img').src=url;}else p.style.display='none';}
+function saveSettings(){APP.settings={salonName:document.getElementById('set-salon-name').value.trim(),phone:document.getElementById('set-phone').value.trim(),instagram:document.getElementById('set-instagram').value.trim(),googleReviewUrl:document.getElementById('set-google-review').value.trim(),bannerUrl:document.getElementById('set-banner-url').value.trim()};saveData(APP);showToast('Configurações salvas!');}
+
+// Loyalty
+function loadLoyaltyForm(){const l=APP.loyaltySettings||{};document.getElementById('loyalty-enabled').checked=!!l.enabled;document.getElementById('loyalty-pts-per-service').value=l.pointsPerService||10;document.getElementById('loyalty-referral-bonus').value=l.referralBonus||20;document.getElementById('loyalty-min-pts').value=l.minPointsToRedeem||100;document.getElementById('loyalty-discount').value=l.discountPerPoint||0.1;}
+function saveLoyalty(){APP.loyaltySettings={enabled:document.getElementById('loyalty-enabled').checked,pointsPerService:parseInt(document.getElementById('loyalty-pts-per-service').value)||0,referralBonus:parseInt(document.getElementById('loyalty-referral-bonus').value)||0,minPointsToRedeem:parseInt(document.getElementById('loyalty-min-pts').value)||0,discountPerPoint:parseFloat(document.getElementById('loyalty-discount').value)||0};saveData(APP);showToast('Programa de fidelidade atualizado!');}
+
+// Clients
+function renderClients(){
+  const clients=[...APP.clients].sort((a,b)=>(b.points||0)-(a.points||0));
+  document.getElementById('clients-count').textContent=`${clients.length} clientes registrados`;
+  document.getElementById('clients-tbody').innerHTML=clients.length?clients.map(c=>`<tr><td><strong>${c.name}</strong></td><td style="color:var(--muted)">${c.phone}</td><td><span class="badge badge-gold">${c.points||0} pts</span></td><td style="text-align:center">🏆 ${c.referrals||0}</td><td style="text-align:center"><button class="btn btn-danger btn-icon" onclick="deleteClient('${c.id}')">🗑</button></td></tr>`).join(''):`<tr><td colspan="5" style="text-align:center;padding:2.5rem;color:var(--muted);font-style:italic">Nenhum cliente ainda.</td></tr>`;
+}
+function deleteClient(id){if(!confirm('Excluir este cliente?'))return;APP.clients=APP.clients.filter(c=>c.id!==id);saveData(APP);renderClients();showToast('Cliente excluído.');}
+
+// Toast
+let toastTimeout;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.style.display='none',3000);}
+
+// Init
+renderClient();
+</script>
+</body>
+</html>
